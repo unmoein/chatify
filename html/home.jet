@@ -49,9 +49,9 @@
 
                 <input type="hidden" name="action" id="action">
 
-                <hr>
+                <div id="status" class="mt-2 float-end"></div>
 
-                <div id="output" class="chatbox">
+                <div id="output" class="chatbox mt-3">
 
                 </div>
             </div>
@@ -91,16 +91,23 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     document.addEventListener("DOMContentLoaded", function() {
         socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws", null, {debug: true, reconnectInterval: 3000});
 
+        const offline = `<span class="badge bg-danger">Not connected</span>`
+        const online = `<span class="badge bg-success">Connected</span>`
+        let statusDiv = document.getElementById("status");
+
         socket.onopen = () => {
             console.log("Successfully Connected");
+            statusDiv.innerHTML = online
         }
 
         socket.onclose = () => {
             console.log("Connection Closed");
+            statusDiv.innerHTML = offline
         }
 
         socket.onerror = error => {
             console.log("There was an error");
+            statusDiv.innerHTML = offline
         }
 
         socket.onmessage = msg => {
